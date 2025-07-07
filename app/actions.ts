@@ -27,11 +27,17 @@ export interface Monster {
   attribute: string;
 }
 
-// サーバーアクション本体
+// prevStateの型を定義
+type ActionState = {
+  message: string;
+  monster?: Monster;
+  error?: string;
+}
+
 export async function generateMonsterAction(
-  prevState: any,
+  prevState: ActionState, // ← any を ActionState に変更
   formData: FormData
-): Promise<{ message: string; monster?: Monster; error?: string }> {
+): Promise<ActionState> {
   
   // 1. フォームデータのバリデーション
   const validatedFields = formSchema.safeParse(Object.fromEntries(formData.entries()));

@@ -75,7 +75,7 @@ export default function HomePage() {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">ミルクモンスター</h1>
-          <p className="mt-2 text-lg text-gray-600">あなたの"おいしい"が、モンスターになる。</p>
+          <p className="mt-2 text-lg text-gray-600">あなたの'おいしい'が、モンスターになる。</p>
         </div>
 
         {/* モンスターが生成されたらカードを表示 */}
