@@ -38,8 +38,7 @@ export async function generateMonsterAction(
   prevState: ActionState, // ← any を ActionState に変更
   formData: FormData
 ): Promise<ActionState> {
-  
-  // 1. フォームデータのバリデーション
+    // 1. フォームデータのバリデーション
   const validatedFields = formSchema.safeParse(Object.fromEntries(formData.entries()));
   if (!validatedFields.success) {
     return { message: '入力内容に誤りがあります。', error: validatedFields.error.flatten().fieldErrors.toString() };
@@ -74,7 +73,7 @@ export async function generateMonsterAction(
 
   // 4. OpenAI APIを呼び出して画像生成
   try {
-    const response = await openai.images.generate({
+   const response = await openai.images.generate({
       model: "dall-e-3",
       prompt: prompt,
       n: 1,
@@ -82,8 +81,12 @@ export async function generateMonsterAction(
       quality: "standard",
     });
 
-    const imageUrl = response.data[0]?.url;
-    if (!imageUrl) throw new Error('画像URLが取得できませんでした。');
+    // response.data と response.data[0] の存在をチェックしてから imageUrl を取得
+    const imageUrl = response.data && response.data[0] ? response.data[0].url : undefined;
+
+    if (!imageUrl) {
+      throw new Error('画像URLが取得できませんでした。');
+    }
 
     const monster: Monster = { name, imageUrl, hp, attack, rarity, attribute };
     return { message: 'モンスターが生まれました！', monster };
