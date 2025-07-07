@@ -34,12 +34,12 @@ function MonsterCard({ monster }: { monster: Monster }) {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm border-t-4 border-blue-500 animate-fade-in">
       <div className="relative aspect-square w-full mb-4">
-        {/* ここを <img> タグに置き換える */}
-        <img
-          src={monster.imageUrl}
-          alt={monster.name}
-          className="absolute top-0 left-0 w-full h-full object-contain"
-          loading="lazy"
+  {/* eslint-disable-next-line @next/next/no-img-element */}
+  <img // ← この行の上に追加
+    src={monster.imageUrl}
+    alt={monster.name}
+    className="absolute top-0 left-0 w-full h-full object-contain"
+    loading="lazy"
         />
       </div>
       <div className="text-center">
@@ -75,7 +75,7 @@ export default function HomePage() {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">ミルクモンスター</h1>
-          <p className="mt-2 text-lg text-gray-600">あなたの'おいしい'が、モンスターになる。</p>
+          <p className="mt-2 text-lg text-gray-600">{'あなたの"おいしい"が、モンスターになる。'}</p>
         </div>
 
         {/* モンスターが生成されたらカードを表示 */}
