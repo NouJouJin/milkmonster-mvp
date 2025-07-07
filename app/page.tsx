@@ -1,103 +1,128 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+// 修正点1: useFormState を useActionState に変更し、'react'からインポート
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { generateMonsterAction, type Monster } from './actions';
+// import Image from 'next/image';
+
+const initialState = {
+  message: '',
+  monster: undefined,
+  error: undefined,
+};
+
+// ローディング中にボタンを無効化するためのコンポーネント
+function SubmitButton() {
+  const { pending } = useFormStatus();
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+    >
+      {pending ? 'モンスターを召喚中...' : 'モンスターを召喚する！'}
+    </button>
+  );
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+// モンスター表示カード
+function MonsterCard({ monster }: { monster: Monster }) {
+  const Star = ({ filled }: { filled: boolean }) => (
+    <span className={`text-3xl ${filled ? 'text-yellow-400' : 'text-gray-300'}`}>★</span>
+  );
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm border-t-4 border-blue-500 animate-fade-in">
+      <div className="relative aspect-square w-full mb-4">
+        {/* ここを <img> タグに置き換える */}
+        <img
+          src={monster.imageUrl}
+          alt={monster.name}
+          className="absolute top-0 left-0 w-full h-full object-contain"
+          loading="lazy"
+        />
+      </div>
+      <div className="text-center">
+        <h3 className="text-2xl font-bold">{monster.name}</h3>
+        <div className="flex justify-center my-2">
+          {[...Array(3)].map((_, i) => <Star key={i} filled={i < monster.rarity} />)}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="flex justify-around text-center mt-4 bg-gray-100 p-3 rounded-lg">
+          <div>
+            <p className="text-sm text-gray-600">HP</p>
+            <p className="text-xl font-bold text-red-500">{monster.hp}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">攻撃力</p>
+            <p className="text-xl font-bold text-blue-500">{monster.attack}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">属性</p>
+            <p className="text-xl font-bold text-green-600">{monster.attribute}</p>
+          </div>
+        </div>
+      </div>
     </div>
+  );
+}
+
+export default function HomePage() {
+  // 修正点2: useFormState を useActionState に変更
+  const [state, formAction] = useActionState(generateMonsterAction, initialState);
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 md:p-12">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">ミルクモンスター</h1>
+          <p className="mt-2 text-lg text-gray-600">あなたの"おいしい"が、モンスターになる。</p>
+        </div>
+
+        {/* モンスターが生成されたらカードを表示 */}
+        {state.monster ? (
+          <div className="flex flex-col items-center gap-6">
+            <MonsterCard monster={state.monster} />
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full max-w-sm bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              もう一度生成する
+            </button>
+          </div>
+        ) : (
+          // まだ生成されていなければフォームを表示
+          <form action={formAction} className="bg-white p-6 rounded-lg shadow-md space-y-4">
+            <div>
+              <label htmlFor="productName" className="block text-sm font-medium text-gray-700">商品名</label>
+              <input type="text" name="productName" id="productName" defaultValue="おいしい牛乳" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700">種類別名称</label>
+              <select name="category" id="category" defaultValue="牛乳" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <option>牛乳</option>
+                <option>加工乳</option>
+                <option>乳飲料</option>
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="nonFatSolid" className="block text-sm font-medium text-gray-700">無脂乳固形分 (%)</label>
+                <input type="number" name="nonFatSolid" id="nonFatSolid" defaultValue="8.3" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label htmlFor="milkFat" className="block text-sm font-medium text-gray-700">乳脂肪分 (%)</label>
+                <input type="number" name="milkFat" id="milkFat" defaultValue="3.8" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="manufacturer" className="block text-sm font-medium text-gray-700">製造者名</label>
+              <input type="text" name="manufacturer" id="manufacturer" defaultValue="明治" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+            </div>
+            <SubmitButton />
+            {state.error && <p className="text-sm text-red-600 mt-2">{state.message}</p>}
+          </form>
+        )}
+      </div>
+    </main>
   );
 }
