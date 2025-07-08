@@ -82,11 +82,16 @@ export async function generateMonsterAction(
   const prompt = `A full-body character of a milk-inspired monster. The monster is ${rarityDesc}. The monster's theme is ${attributeDesc}. Style: cute, Japanese anime style, simple vector art, clean lines, on a pure white background.`;
 
   try {
-    const dalleResponse = await openai.images.generate({
+     const dalleResponse = await openai.images.generate({
       model: "dall-e-3", prompt, n: 1, size: "1024x1024", quality: "standard",
     });
-    const imageUrl = dalleResponse.data[0]?.url;
-    if (!imageUrl) throw new Error('画像URLが取得できませんでした。');
+    
+    // data と data[0] の存在をチェックしてから url を取得する
+    const imageUrl = dalleResponse.data && dalleResponse.data[0] ? dalleResponse.data[0].url : undefined;
+
+    if (!imageUrl) {
+      throw new Error('画像URLが取得できませんでした。');
+    }
 
     const accessToken = await getGoogleAccessToken();
     const monsterId = crypto.randomUUID();
