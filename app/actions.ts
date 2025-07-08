@@ -123,11 +123,13 @@ export async function getMonsters(): Promise<{ monsters: Monster[], error?: stri
     const data = await response.json();
     const rows = data.values || [];
     if (rows.length <= 1) return { monsters: [] };
-    const monsters = rows.slice(1).map((row: any[]) => ({
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const monsters = rows.slice(1).map((row: any[]) => ({ // ← この行の上に追加
       id: row[0] || '', name: row[1] || '', imageUrl: row[2] || '',
       hp: parseInt(row[3], 10) || 0, attack: parseInt(row[4], 10) || 0,
       rarity: parseInt(row[5], 10) || 0, attribute: row[6] || '',
     })).reverse();
+    
     return { monsters };
   } catch (error) {
     return { monsters: [], error: (error as Error).message };
