@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom';
 import { generateMonsterAction, type Monster } from './actions';
 import Link from 'next/link';
 
-// --- 型定義と初期値 (変更なし) ---
+// --- 型定義と初期値 ---
 const initialState: {
   message: string;
   monster?: Monster;
@@ -17,13 +17,13 @@ const initialState: {
 
 // --- コンポーネント定義 ---
 
-// ヘッダー (変更なし)
+// ヘッダー
 function Header() {
   return (
-    <header className="w-full bg-white shadow-md">
+    <header className="w-full bg-white shadow-md sticky top-0 z-10">
       <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">ミルクモンスター</h1>
-        <Link href="/collection" className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition-colors">
+        <h1 className="text-xl font-bold text-blue-600">Milk Monster</h1>
+        <Link href="/collection" className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
           図鑑を見る
         </Link>
       </nav>
@@ -31,21 +31,21 @@ function Header() {
   );
 }
 
-// 送信ボタン (ローディング中の文字色を修正)
+// 送信ボタン
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-white" // ← 修正: disabled:text-white を追加
+      className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-white"
     >
       {pending ? 'モンスターを召喚中...' : 'モンスターを召喚する！'}
     </button>
   );
 }
 
-// モンスター表示カード (変更なし)
+// モンスター表示カード
 function MonsterCard({ monster }: { monster: Monster }) {
   const Star = ({ filled }: { filled: boolean }) => (
     <span className={`text-3xl ${filled ? 'text-yellow-400' : 'text-gray-300'}`}>★</span>
@@ -81,9 +81,9 @@ export default function HomePage() {
   const [state, formAction] = useActionState(generateMonsterAction, initialState);
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <div className="flex min-h-screen flex-col items-center bg-gray-50">
       <Header />
-      <main className="flex-grow flex flex-col items-center justify-center p-4 sm:p-8 md:p-12 w-full">
+      <main className="flex-grow w-full flex flex-col items-center justify-center p-4 sm:p-8">
         <div className="w-full max-w-md space-y-8">
           {state.monster ? (
             <div className="flex flex-col items-center gap-6">
@@ -96,18 +96,17 @@ export default function HomePage() {
           ) : (
             <>
               <div className="text-center">
-                <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight">ミルクモンスター</h2>
+                 <h2 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-yellow-500">Milk Monster</h2>
                 <p className="mt-2 text-lg text-gray-600">{'あなたの"おいしい"が、モンスターになる。'}</p>
               </div>
               <form action={formAction} className="bg-white p-6 rounded-lg shadow-md space-y-4">
-                {/* --- ここからフォーム要素の修正 --- */}
                 <div>
-                  <label htmlFor="productName" className="block text-sm font-medium text-gray-800">商品名</label> {/* ← 修正: text-gray-700 -> 800 */}
-                  <input type="text" name="productName" id="productName" defaultValue="おいしい牛乳" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" /> {/* ← 修正: text-*, placeholder-* を追加 */}
+                  <label htmlFor="productName" className="block text-sm font-medium text-gray-800">商品名</label>
+                  <input type="text" name="productName" id="productName" defaultValue="おいしい牛乳" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
                 </div>
                 <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-gray-800">種類別名称</label> {/* ← 修正: text-gray-700 -> 800 */}
-                  <select name="category" id="category" defaultValue="牛乳" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900"> {/* ← 修正: text-* を追加 */}
+                  <label htmlFor="category" className="block text-sm font-medium text-gray-800">種類別名称</label>
+                  <select name="category" id="category" defaultValue="牛乳" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900">
                     <option>牛乳</option>
                     <option>加工乳</option>
                     <option>乳飲料</option>
@@ -115,17 +114,17 @@ export default function HomePage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="nonFatSolid" className="block text-sm font-medium text-gray-800">無脂乳固形分 (%)</label> {/* ← 修正: text-gray-700 -> 800 */}
-                    <input type="number" name="nonFatSolid" id="nonFatSolid" defaultValue="8.3" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" /> {/* ← 修正: text-*, placeholder-* を追加 */}
+                    <label htmlFor="nonFatSolid" className="block text-sm font-medium text-gray-800">無脂乳固形分 (%)</label>
+                    <input type="number" name="nonFatSolid" id="nonFatSolid" defaultValue="8.3" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
                   </div>
                   <div>
-                    <label htmlFor="milkFat" className="block text-sm font-medium text-gray-800">乳脂肪分 (%)</label> {/* ← 修正: text-gray-700 -> 800 */}
-                    <input type="number" name="milkFat" id="milkFat" defaultValue="3.8" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" /> {/* ← 修正: text-*, placeholder-* を追加 */}
+                    <label htmlFor="milkFat" className="block text-sm font-medium text-gray-800">乳脂肪分 (%)</label>
+                    <input type="number" name="milkFat" id="milkFat" defaultValue="3.8" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="manufacturer" className="block text-sm font-medium text-gray-800">製造者名</label> {/* ← 修正: text-gray-700 -> 800 */}
-                  <input type="text" name="manufacturer" id="manufacturer" defaultValue="明治" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" /> {/* ← 修正: text-*, placeholder-* を追加 */}
+                  <label htmlFor="manufacturer" className="block text-sm font-medium text-gray-800">製造者名</label>
+                  <input type="text" name="manufacturer" id="manufacturer" defaultValue="明治" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
                 </div>
                 <SubmitButton />
                 {state.error && <p className="text-sm text-red-600 mt-2">{state.message}: {state.error}</p>}

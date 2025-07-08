@@ -5,7 +5,7 @@ import "./globals.css";
 const noto = Noto_Sans_JP({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ミルクモンスター MVP",
+  title: "ミルクモンスター",
   description: "あなたの'おいしい'が、モンスターになる。",
 };
 
@@ -15,8 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={`${noto.className} bg-gray-50`}>{children}</body>
+    <html lang="ja" suppressHydrationWarning={true}>
+      {/* 背景色クラスを削除 */}
+      <body className={`${noto.className}`}>{children}</body>
     </html>
   );
 }

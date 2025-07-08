@@ -1,7 +1,7 @@
 // app/collection/page.tsx
 
 import Link from 'next/link';
-import { getMonsters } from '../actions'; // actions.tsから関数をインポート
+import { getMonsters } from '../actions';
 
 // --- 型定義 ---
 interface Monster {
@@ -26,7 +26,8 @@ function MonsterCard({ monster }: { monster: Monster }) {
         <img src={monster.imageUrl} alt={monster.name} className="absolute top-0 left-0 w-full h-full object-contain" loading="lazy" />
       </div>
       <div className="text-center">
-        <h3 className="text-lg font-bold truncate">{monster.name}</h3>
+        {/* モンスター名の文字色を修正 */}
+        <h3 className="text-lg font-bold text-gray-800 truncate">{monster.name}</h3>
         <div className="flex justify-center my-1">
           {[...Array(3)].map((_, i) => <Star key={i} filled={i < monster.rarity} />)}
         </div>
@@ -44,7 +45,7 @@ export default async function CollectionPage() {
       <header className="w-full bg-white shadow-md sticky top-0 z-10">
         <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
           <h1 className="text-xl font-bold text-blue-600">モンスター図鑑</h1>
-          <Link href="/" className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+          <Link href="/" className="px-4 py-2 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">
             新しく生成する
           </Link>
         </nav>
@@ -67,5 +68,4 @@ export default async function CollectionPage() {
   );
 }
 
-// Vercelのエッジランタイムで動かすための設定
-export const revalidate = 60; // 60秒ごとにデータを再取得（キャッシュを更新）
+export const revalidate = 60; // 60秒ごとにデータを再取得
