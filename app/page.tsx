@@ -84,8 +84,10 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col items-center bg-gray-50">
       <Header />
       <main className="flex-grow w-full flex flex-col items-center justify-center p-4 sm:p-8">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-2xl space-y-8"> {/* ← max-w-md から max-w-2xl に変更して少し広く */}
+          
           {state.monster ? (
+            // --- 結果表示 ---
             <div className="flex flex-col items-center gap-6">
               <h2 className="text-3xl font-bold">モンスター誕生！</h2>
               <MonsterCard monster={state.monster} />
@@ -94,41 +96,55 @@ export default function HomePage() {
               </button>
             </div>
           ) : (
+            // --- 初期表示 (キービジュアル + フォーム) ---
             <>
-              <div className="text-center">
-                 <h2 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-yellow-500">Milk Monster</h2>
+              {/* ★★★ ここからキービジュアルを追加 ★★★ */}
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img 
+                  src="/key-visual.png" 
+                  alt="ミルクモンスター キービジュアル" 
+                  className="w-full h-auto object-cover" 
+                />
+              </div>
+              {/* ★★★ ここまで ★★★ */}
+                 <div className="text-center mt-8">
+                <h2 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-yellow-500">ミルクモンスター</h2>
                 <p className="mt-2 text-lg text-gray-600">{'あなたの"おいしい"が、モンスターになる。'}</p>
               </div>
-              <form action={formAction} className="bg-white p-6 rounded-lg shadow-md space-y-4">
-                <div>
-                  <label htmlFor="productName" className="block text-sm font-medium text-gray-800">商品名</label>
-                  <input type="text" name="productName" id="productName" defaultValue="おいしい牛乳" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
-                </div>
-                <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-gray-800">種類別名称</label>
-                  <select name="category" id="category" defaultValue="牛乳" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900">
-                    <option>牛乳</option>
-                    <option>加工乳</option>
-                    <option>乳飲料</option>
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+
+              <div className="max-w-md mx-auto"> {/* フォームの幅は維持 */}
+                <form action={formAction} className="bg-white p-6 rounded-lg shadow-md space-y-4">
                   <div>
-                    <label htmlFor="nonFatSolid" className="block text-sm font-medium text-gray-800">無脂乳固形分 (%)</label>
-                    <input type="number" name="nonFatSolid" id="nonFatSolid" defaultValue="8.3" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
+                    <label htmlFor="productName" className="block text-sm font-medium text-gray-800">商品名</label>
+                    <input type="text" name="productName" id="productName" defaultValue="おいしい牛乳" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
                   </div>
                   <div>
-                    <label htmlFor="milkFat" className="block text-sm font-medium text-gray-800">乳脂肪分 (%)</label>
-                    <input type="number" name="milkFat" id="milkFat" defaultValue="3.8" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
+                    <label htmlFor="category" className="block text-sm font-medium text-gray-800">種類別名称</label>
+                    <select name="category" id="category" defaultValue="牛乳" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900">
+                      <option>牛乳</option>
+                      <option>加工乳</option>
+                      <option>乳飲料</option>
+                    </select>
                   </div>
-                </div>
-                <div>
-                  <label htmlFor="manufacturer" className="block text-sm font-medium text-gray-800">製造者名</label>
-                  <input type="text" name="manufacturer" id="manufacturer" defaultValue="明治" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
-                </div>
-                <SubmitButton />
-                {state.error && <p className="text-sm text-red-600 mt-2">{state.message}: {state.error}</p>}
-              </form>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="nonFatSolid" className="block text-sm font-medium text-gray-800">無脂乳固形分 (%)</label>
+                      <input type="number" name="nonFatSolid" id="nonFatSolid" defaultValue="8.3" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
+                    </div>
+                    <div>
+                      <label htmlFor="milkFat" className="block text-sm font-medium text-gray-800">乳脂肪分 (%)</label>
+                      <input type="number" name="milkFat" id="milkFat" defaultValue="3.8" step="0.1" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="manufacturer" className="block text-sm font-medium text-gray-800">製造者名</label>
+                    <input type="text" name="manufacturer" id="manufacturer" defaultValue="明治" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 placeholder:text-gray-400" />
+                  </div>
+                  <SubmitButton />
+                  {state.error && <p className="text-sm text-red-600 mt-2">{state.message}: {state.error}</p>}
+                </form>
+              </div>
             </>
           )}
         </div>
@@ -136,3 +152,4 @@ export default function HomePage() {
     </div>
   );
 }
+
